@@ -10,6 +10,9 @@ struct config {
 	int ifindex;
 	char *ifname;
 	char ifname_buf[IF_NAMESIZE];
+	int ifindex2;
+	char *ifname2;
+	char ifname2_buf[IF_NAMESIZE];
 	int redirect_ifindex;
 	char *redirect_ifname;
 	char redirect_ifname_buf[IF_NAMESIZE];

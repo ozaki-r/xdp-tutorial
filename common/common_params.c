@@ -92,7 +92,7 @@ void parse_cmdline_args(int argc, char **argv,
 	}
 
 	/* Parse commands line args */
-	while ((opt = getopt_long(argc, argv, "hd:r:L:R:ASNFUMQ:czpq",
+	while ((opt = getopt_long(argc, argv, "hd:D:r:L:R:ASNFUMQ:czpq",
 				  long_options, &longindex)) != -1) {
 		switch (opt) {
 		case 'd':
@@ -104,6 +104,21 @@ void parse_cmdline_args(int argc, char **argv,
 			strncpy(cfg->ifname, optarg, IF_NAMESIZE);
 			cfg->ifindex = if_nametoindex(cfg->ifname);
 			if (cfg->ifindex == 0) {
+				fprintf(stderr,
+					"ERR: --dev name unknown err(%d):%s\n",
+					errno, strerror(errno));
+				goto error;
+			}
+			break;
+		case 'D':
+			if (strlen(optarg) >= IF_NAMESIZE) {
+				fprintf(stderr, "ERR: --dev name too long\n");
+				goto error;
+			}
+			cfg->ifname2 = (char *)&cfg->ifname2_buf;
+			strncpy(cfg->ifname2, optarg, IF_NAMESIZE);
+			cfg->ifindex2 = if_nametoindex(cfg->ifname2);
+			if (cfg->ifindex2 == 0) {
 				fprintf(stderr,
 					"ERR: --dev name unknown err(%d):%s\n",
 					errno, strerror(errno));
